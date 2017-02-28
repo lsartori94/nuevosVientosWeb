@@ -1,6 +1,6 @@
 import { NuevosVientosWebPage } from './app.po';
 
-describe('nuevos-vientos-web App', function() {
+describe('nuevos-vientos-web App', () => {
   let page: NuevosVientosWebPage;
 
   beforeEach(() => {

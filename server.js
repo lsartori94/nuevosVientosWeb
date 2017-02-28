@@ -5,9 +5,13 @@ var ObjectID = mongodb.ObjectID;
 
 var EVENTS_COLLECTION = "events";
 var ORGANIZERS_COLLECTION = "organizers";
+var PEOPLE_COLLECTION = "people";
 
 var app = express();
 app.use(bodyParser.json());
+
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database)=> {
@@ -27,8 +31,6 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database)=> {
     });
 });
 
-// CONTACTS API ROUTES BELOW
-
 // Generic error handler used by all endpoints
 function handleError(res, reason, message, code) {
     console.log("ERROR: " + reason);
@@ -46,7 +48,7 @@ function handleError(res, reason, message, code) {
 app.get("/api/events", (req, res) => {
     db.collection(EVENTS_COLLECTION).find({}).toArray((err, docs) => {
         if (err) {
-            handleError(res, err.message, "Failed to get contacts.");
+            handleError(res, err.message, "Failed to get events.");
         } else {
             res.status(200).json(docs);
         }
@@ -62,7 +64,7 @@ app.post("/api/events", (req, res) => {
 
     db.collection(EVENTS_COLLECTION).insertOne(newEvent, (err, doc) => {
         if (err) {
-            handleError(res, err.message, "Failes to create new contact.");
+            handleError(res, err.message, "Failed to create new event.");
         } else {
             res.status(201).json(doc.ops[0]);
         }
@@ -70,7 +72,7 @@ app.post("/api/events", (req, res) => {
 });
 
 app.put("/api/events/:id", (req, res) => {
-    let updateOrganizer = req.body;
+    let updateDoc = req.body;
     delete updateDoc._id;
 
     db.collection(EVENTS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
@@ -94,33 +96,100 @@ app.delete("/api/events/:id", (req, res) => {
 });
 
 /**
- *  "/api/organizers"
- *      GET: find organizer by id
- *      PUT: update organizer by id
- *      POST: create organizer by id
- *      DELETE: deletes organizer by id
+ *  "/api/people"
+ *      GET: find person by id
+ *      GET: get all people
+ *      PUT: update people by id
+ *      POST: create person by id
+ *      DELETE: deletes people by id
  */
 
-app.get("/api/organizers/:id", (req, res) => {
-    db.collection(ORGANIZERS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+app.get("/api/people", (req, res) => {
+    db.collection(PEOPLE_COLLECTION).find({}).toArray((err, docs) => {
         if (err) {
-            handleError(res, err.message, "Failed to get organizer.");
+            handleError(res, err.message, "Failed to get people.");
+        } else {
+            res.status(200).json(docs);
+        }
+    })
+});
+
+app.get("/api/people/:id", (req, res) => {
+    db.collection(PEOPLE_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get person.");
         } else {
             res.status(200).json(doc);
         }
     });
 });
 
-app.post("/api/organizers", (req, res) => {
-    let newEvent = req.body;
+app.post("/api/people", (req, res) => {
+    let newPerson = req.body;
+    if (!req.body.name) {
+        handleError(res, "Invalid user input", "Must provide a name", 400);
+    }
+    db.collection(PEOPLE_COLLECTION).insertOne(newPerson, (err, doc) => {
+        if (err) {
+            handleError(res, err.message, "Failes to create new person.");
+        } else {
+            res.status(201).json(doc.ops[0]);
+        }
+    });
+});
+
+app.put("/api/people/:id", (req, res) => {
+    let updatePerson = req.body;
+    delete updatePerson._id;
+
+    db.collection(PEOPLE_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updatePerson, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to update person.");
+        } else {
+            updatePerson._id = req.params.id;
+            res.status(200).json(updatePerson);
+        }
+    });
+});
+
+app.delete("/api/people/:id", (req, res) => {
+    db.collection(PEOPLE_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+        if (err) {
+            handleError(res, err.message, "Failed to delete person");
+        } else {
+            res.status(200).json(req.params.id);
+        }
+    });
+});
+
+/**
+ *  "/api/organizers"
+ *      GET: finds all organizers
+ *      POST: creates a new organizer
+ *      PUT: update organizer by id
+ *      DELETE: deletes an organizer by id
+ */
+
+app.get("/api/organizers", (req, res) => {
+    db.collection(ORGANIZERS_COLLECTION).find({}).toArray((err, docs) => {
+        if (err) {
+            handleError(res, err.message, "Failed to get organizers.");
+        } else {
+            res.status(200).json(docs);
+        }
+    })
+});
+
+app.post("/api/organziers", (req, res) => {
+    let newOrganizer = req.body;
 
     if (!req.body.name) {
         handleError(res, "Invalid user input", "Must provide a name", 400);
     }
 
-    db.collection(ORGANIZERS_COLLECTION).insertOne(newEvent, (err, doc) => {
+    db.collection(ORGANIZERS_COLLECTION).insertOne(newOrganizer, (err, doc) => {
         if (err) {
-            handleError(res, err.message, "Failes to create new organizer.");
+            handleError(res, err.message, "Failed to create new organizer.");
         } else {
             res.status(201).json(doc.ops[0]);
         }
@@ -129,14 +198,14 @@ app.post("/api/organizers", (req, res) => {
 
 app.put("/api/organizers/:id", (req, res) => {
     let updateOrganizer = req.body;
-    delete updateDoc._id;
+    delete updateOrganizer._id;
 
-    db.collection(ORGANIZERS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+    db.collection(ORGANIZERS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateOrganizer, function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to update organizer.");
         } else {
-            updateDoc._id = req.params.id;
-            res.status(200).json(updateDoc);
+            updateOrganizer._id = req.params.id;
+            res.status(200).json(updateOrganizer);
         }
     });
 });

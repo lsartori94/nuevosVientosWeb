@@ -46,7 +46,11 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
+<<<<<<< HEAD
     "no-inferrable-types": true,
+=======
+    "no-inferrable-types": [true, "ignore-params"],
+>>>>>>> Implement all API endpoints and angular webapp
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
