@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminPageComponent } from '../pages/admin-page/admin-page.component';
+import { HomePageComponent } from '../pages/home-page/home-page.component';
+import { EventDetailsComponent } from '../pages/event-details/event-details.component';
 
 
 const routes: Routes = [
-    // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    // { path: 'dashboard', component: DashboardComponent },
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: 'home', component: HomePageComponent },
     // { path: 'detail/:id', component: HeroDetailComponent },
-    // { path: 'heroes', component: HeroesComponent }
+    { path: 'admin', component: AdminPageComponent }
+];
+
+export const RoutableComponents = [
+    AdminPageComponent,
+    HomePageComponent,
+    EventDetailsComponent
 ];
 
 @NgModule({
