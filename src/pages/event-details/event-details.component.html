@@ -1,0 +1,29 @@
+<div *ngIf="eventToShow" class="row">
+  <div class="col-md-12">
+    <h2 *ngIf="eventToShow._id">Event Details</h2>
+    <h2 *ngIf="!eventToShow._id">New Event</h2>
+  </div>
+</div>
+<div *ngIf="eventToShow" class="row">
+  <form class="col-md-12">
+
+    <img src="{{eventToShow.image}}">
+    
+    <div class="form-group">
+      <label for="event-name">Name</label>
+      <input class="form-control" name="event-name" [(ngModel)]="eventToShow.name" placeholder="Name"/>
+
+      <label for="event-description">Description</label>
+      <input class="form-control" name="event-description" [(ngModel)]="eventToShow.description" placeholder="Description"/>
+
+      <label for="event-date">Date</label>
+      <input class="form-control" name="event-date" [(ngModel)]="eventToShow.date" placeholder="Date"/>
+
+      <label for="event-time">Time</label>
+      <input class="form-control" name="event-time" [(ngModel)]="eventToShow.time" placeholder="Time"/>
+    </div>
+    <button class="btn btn-primary" *ngIf="!eventToShow._id" (click)="createEvent(eventToShow)">Create</button>
+    <button class="btn btn-info" *ngIf="eventToShow._id" (click)="updateEvent(eventToShow)">Update</button>
+    <button class="btn btn-danger" *ngIf="eventToShow._id" (click)="deleteEvent(eventToShow._id)">Delete</button>
+  </form>
+</div>
