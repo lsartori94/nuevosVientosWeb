@@ -10,8 +10,8 @@ import { AppComponent } from './app.component';
 // import { InMemoryDataService } from '../providers/in-memory-data.service';
 
 import { EventsService } from '../providers/event/event.service';
-import { PeopleService } from '../providers/people/people.service';
-import { OrganizerService } from '../providers/organizer/organizer.service';
+// import { PeopleService } from '../providers/people/people.service';
+// import { OrganizerService } from '../providers/organizer/organizer.service';
 
 @NgModule({
   declarations: [
@@ -27,8 +27,8 @@ import { OrganizerService } from '../providers/organizer/organizer.service';
   ],
   providers: [
     EventsService,
-    PeopleService,
-    OrganizerService
+    // PeopleService,
+    // OrganizerService
   ],
   bootstrap: [AppComponent]
 })
