@@ -7,14 +7,15 @@ import { Backend } from '../appConstants';
 
 @Injectable()
 export class EventsService {
+    backend = Backend;
 
-    constructor (private http: Http, private backend: Backend) {}
+    constructor (private http: Http) {}
 
     // get("/api/events")
     getEvents(): Promise<Event[]> {
       return this.http.get(this.backend.eventsAPI)
                  .toPromise()
-                 .then(response => response.json() as Event[])
+                 .then(response => response.json().data as Event[])
                  .catch(this.handleError);
     }
 
@@ -22,7 +23,7 @@ export class EventsService {
     createEvent(newEvent: Event): Promise<Event> {
       return this.http.post(this.backend.eventsAPI, newEvent)
                  .toPromise()
-                 .then(response => response.json() as Event)
+                 .then(response => response.json().data as Event)
                  .catch(this.handleError);
     }
 
@@ -41,7 +42,7 @@ export class EventsService {
       var putUrl = this.backend.eventsAPI + '/' + putEvent._id;
       return this.http.put(putUrl, putEvent)
                  .toPromise()
-                 .then(response => response.json() as Event)
+                 .then(response => response.json().data as Event)
                  .catch(this.handleError);
     }
 

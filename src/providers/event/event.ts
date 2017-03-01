@@ -5,6 +5,6 @@ export class Event {
     "name": string;
     "image": any;
     "description": string;
-    "date": Date;
-    "participants": Array<People>;
+    "date": string;
+    "participants": Array<string>;
 }
