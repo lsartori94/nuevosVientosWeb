@@ -21,6 +21,17 @@
 
       <label for="event-time">Time</label>
       <input class="form-control" name="event-time" [(ngModel)]="eventToShow.time" placeholder="Time"/>
+
+      <label for="event-participants">Participants</label>
+      <ul id="participants">
+        <li *ngFor= "let part of eventToShow.participants; let idx = index">
+          {{part.name}}
+          <button type="button" class="btn btn-default btn-sm pull-right" aria-label="Right Align">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+          </button>
+        </li>
+      </ul>
+
     </div>
     <button class="btn btn-primary" *ngIf="!eventToShow._id" (click)="createEvent(eventToShow)">Create</button>
     <button class="btn btn-info" *ngIf="eventToShow._id" (click)="updateEvent(eventToShow)">Update</button>

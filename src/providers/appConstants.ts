@@ -1,5 +1,5 @@
-export class Backend {
-    eventsAPI: string = "/api/events";
-    peopleAPI: string = "api/people"
-    organizersAPI: string = "api/organizers";
+export const Backend = {
+    eventsAPI: `api/events`,
+    peopleAPI: `api/people`,
+    organizersAPI: `api/organizers`
 }

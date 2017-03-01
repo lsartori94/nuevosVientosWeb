@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { Event } from '../../providers/event/event';
+import { People } from '../../providers/people/people';
+
 import { EventsService } from '../../providers/event/event.service';
 
 
@@ -7,7 +9,7 @@ import { EventsService } from '../../providers/event/event.service';
     // moduleId: module.id,
     selector: 'event-details',
     templateUrl: './event-details.component.html',
-    styleUrls: ['./event-details.component.sass']
+    styleUrls: ['./event-details.component.scss']
 })
 export class EventDetailsComponent {
 
@@ -20,7 +22,13 @@ export class EventDetailsComponent {
   @Input()
   deleteHandler: Function;
 
+  people: Array<People> = [];
+
   constructor (private eventsService: EventsService) {}
+
+  findParticipant(id: string) {
+    return this.people.reduce(elem => elem._id === id ? elem : null);
+  }
 
   createEvent(event: Event) {
     this.eventsService.createEvent(event).then((newEvent: Event) => {

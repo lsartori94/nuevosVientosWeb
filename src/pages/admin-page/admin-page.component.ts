@@ -45,7 +45,7 @@ export class AdminPageComponent implements OnInit {
       image: "",
       description: "",
       date: "",
-      participants: ""
+      participants: Array<string>()
     };
 
     // By default, a newly-created event will have the selected state.
