@@ -7,6 +7,8 @@ var EVENTS_COLLECTION = "events";
 var ORGANIZERS_COLLECTION = "organizers";
 var PEOPLE_COLLECTION = "people";
 
+var db_dir = process.env.MONGODB_URI || "mongodb://heroku_vcp96dl0:vbck8g7gdfo5sikie8rtdtujiv@ds113630.mlab.com:13630/heroku_vcp96dl0";
+
 var app = express();
 app.use(bodyParser.json());
 
@@ -15,11 +17,13 @@ app.use(express.static(distDir));
 
 // 404 catch 
 app.all('*', function (req, res) {
-    res.status(200).sendFile(distDir + '/index.html');
+    if (!req.url.includes('/api/')) {
+        res.status(200).sendFile(distDir + '/index.html');
+    }
 });
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
-mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database)=> {
+mongodb.MongoClient.connect(db_dir, (err, database)=> {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -109,63 +113,63 @@ app.delete("/api/events/:id", (req, res) => {
  *      DELETE: deletes people by id
  */
 
-app.get("/api/people", (req, res) => {
-    db.collection(PEOPLE_COLLECTION).find({}).toArray((err, docs) => {
-        if (err) {
-            handleError(res, err.message, "Failed to get people.");
-        } else {
-            res.status(200).json(docs);
-        }
-    })
-});
+// app.get("/api/people", (req, res) => {
+//     db.collection(PEOPLE_COLLECTION).find({}).toArray((err, docs) => {
+//         if (err) {
+//             handleError(res, err.message, "Failed to get people.");
+//         } else {
+//             res.status(200).json(docs);
+//         }
+//     })
+// });
 
-app.get("/api/people/:id", (req, res) => {
-    db.collection(PEOPLE_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to get person.");
-        } else {
-            res.status(200).json(doc);
-        }
-    });
-});
+// app.get("/api/people/:id", (req, res) => {
+//     db.collection(PEOPLE_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+//         if (err) {
+//             handleError(res, err.message, "Failed to get person.");
+//         } else {
+//             res.status(200).json(doc);
+//         }
+//     });
+// });
 
-app.post("/api/people", (req, res) => {
-    let newPerson = req.body;
-    if (!req.body.name) {
-        handleError(res, "Invalid user input", "Must provide a name", 400);
-    }
-    db.collection(PEOPLE_COLLECTION).insertOne(newPerson, (err, doc) => {
-        if (err) {
-            handleError(res, err.message, "Failes to create new person.");
-        } else {
-            res.status(201).json(doc.ops[0]);
-        }
-    });
-});
+// app.post("/api/people", (req, res) => {
+//     let newPerson = req.body;
+//     if (!req.body.name) {
+//         handleError(res, "Invalid user input", "Must provide a name", 400);
+//     }
+//     db.collection(PEOPLE_COLLECTION).insertOne(newPerson, (err, doc) => {
+//         if (err) {
+//             handleError(res, err.message, "Failes to create new person.");
+//         } else {
+//             res.status(201).json(doc.ops[0]);
+//         }
+//     });
+// });
 
-app.put("/api/people/:id", (req, res) => {
-    let updatePerson = req.body;
-    delete updatePerson._id;
+// app.put("/api/people/:id", (req, res) => {
+//     let updatePerson = req.body;
+//     delete updatePerson._id;
 
-    db.collection(PEOPLE_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updatePerson, function(err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to update person.");
-        } else {
-            updatePerson._id = req.params.id;
-            res.status(200).json(updatePerson);
-        }
-    });
-});
+//     db.collection(PEOPLE_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updatePerson, function(err, doc) {
+//         if (err) {
+//             handleError(res, err.message, "Failed to update person.");
+//         } else {
+//             updatePerson._id = req.params.id;
+//             res.status(200).json(updatePerson);
+//         }
+//     });
+// });
 
-app.delete("/api/people/:id", (req, res) => {
-    db.collection(PEOPLE_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
-        if (err) {
-            handleError(res, err.message, "Failed to delete person");
-        } else {
-            res.status(200).json(req.params.id);
-        }
-    });
-});
+// app.delete("/api/people/:id", (req, res) => {
+//     db.collection(PEOPLE_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+//         if (err) {
+//             handleError(res, err.message, "Failed to delete person");
+//         } else {
+//             res.status(200).json(req.params.id);
+//         }
+//     });
+// });
 
 /**
  *  "/api/organizers"
