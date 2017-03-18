@@ -7,7 +7,7 @@ var EVENTS_COLLECTION = "events";
 var ORGANIZERS_COLLECTION = "organizers";
 var PEOPLE_COLLECTION = "people";
 
-var db_dir = process.env.MONGODB_URI || "mongodb://heroku_vcp96dl0:vbck8g7gdfo5sikie8rtdtujiv@ds113630.mlab.com:13630/heroku_vcp96dl0";
+var db_dir = process.env.MONGODB_URI;
 
 var app = express();
 app.use(bodyParser.json());
@@ -17,9 +17,9 @@ app.use(express.static(distDir));
 
 // 404 catch 
 app.all('*', function (req, res) {
-    // if (!req.url.includes('/api/')) {
+    if (!req.url.includes('/api/')) {
         res.status(200).sendFile(distDir + '/index.html');
-    // }
+    }
 });
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
