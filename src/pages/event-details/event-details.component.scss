@@ -1,12 +1,22 @@
-#participants {
-    width: 75%;
-    li {
-        margin: 20px 0;
-    }
-}
-
 .form-group {
     label {
         margin: 10px 0;
+    }
+    #participants {
+        width: 75%;
+        li {
+            margin: 20px 0;
+        }
+    }
+    #addParticipantBtn {
+        margin: auto;
+    }
+}
+
+#participantForm {
+    width: 75%;
+    margin: 2em 2em;
+    .btn {
+        margin: auto;
     }
 }

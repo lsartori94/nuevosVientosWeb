@@ -6,42 +6,43 @@ import 'rxjs/add/operator/toPromise';
 import { Backend } from '../appConstants';
 
 @Injectable()
-export class PeopleService {
+export class OrganizerService {
+    backend = Backend;
 
-    constructor (private http: Http, private backend: Backend) {}
+    constructor (private http: Http) {}
 
     // get("/api/people")
-    getEvents(): Promise<Organizer[]> {
+    getOrganizers(): Promise<Organizer[]> {
       return this.http.get(this.backend.organizersAPI)
                  .toPromise()
-                 .then(response => response.json() as Organizer[])
+                 .then(response => response.json().data as Organizer[])
                  .catch(this.handleError);
     }
 
     // post("/api/people")
-    createEvent(newPerson: Organizer): Promise<Organizer> {
+    createOrganizer(newPerson: Organizer): Promise<Organizer> {
       return this.http.post(this.backend.organizersAPI, newPerson)
                  .toPromise()
-                 .then(response => response.json() as Organizer)
+                 .then(response => response.json().data as Organizer)
                  .catch(this.handleError);
     }
 
     // get("/api/people/:id") endpoint not used by Angular app
 
     // delete("/api/people/:id")
-    deleteEvent(delPersonId: String): Promise<String> {
+    deleteOrganizer(delPersonId: String): Promise<String> {
       return this.http.delete(this.backend.organizersAPI + '/' + delPersonId)
                  .toPromise()
-                 .then(response => response.json() as String)
+                 .then(response => response.json().data as String)
                  .catch(this.handleError);
     }
 
     // put("/api/people/:id")
-    updateEvent(putPerson: Organizer): Promise<Organizer> {
+    updateOrganizer(putPerson: Organizer): Promise<Organizer> {
       var putUrl = this.backend.organizersAPI + '/' + putPerson._id;
       return this.http.put(putUrl, putPerson)
                  .toPromise()
-                 .then(response => response.json() as Organizer)
+                 .then(response => response.json().data as Organizer)
                  .catch(this.handleError);
     }
 

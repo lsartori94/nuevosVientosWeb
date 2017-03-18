@@ -1,10 +1,10 @@
 import { People } from '../people/people';
 
 export class Event {
-    "_id": string;
+    "_id"?: string;
     "name": string;
-    "image": any;
+    "image"?: any;
     "description": string;
     "date": string;
-    "participants": Array<string>;
+    "participants": Array<any>;
 }

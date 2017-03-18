@@ -7,17 +7,22 @@
         *ngFor="let event of events"
         (click)="selectEvent(event)"
         [class.active]="event === selectedEvent">
-        {{event.name}}     id: {{event._id}}
+        {{event.name}}
       </li>
     </ul>
     <button class="btn btn-warning" (click)="createNewEvent()">New</button>
   </div>
-  <div class="col-md-5 col-md-offset-2">
+  <div class="col-md-5 col-md-offset-2" *ngIf=selectedEvent>
     <event-details
       [eventToShow]="selectedEvent"
       [createHandler]="addEvent"
       [updateHandler]="updateEvent"
       [deleteHandler]="deleteEvent">
     </event-details>
+  </div>
+  <div class="col-md-5 col-md-offset-2" *ngIf=!selectedEvent [ngSwitch]="successCode">
+      <div *ngSwitchCase="codes.UPDATE">Event Updated</div>
+      <div *ngSwitchCase="codes.DELETE">Event Deleted</div>
+      <div *ngSwitchCase="codes.ADD">Event Added</div>
   </div>
 </div>

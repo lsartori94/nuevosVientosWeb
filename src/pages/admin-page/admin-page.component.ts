@@ -4,6 +4,8 @@ import { People } from '../../providers/people/people';
 import { EventsService } from '../../providers/event/event.service';
 import { EventDetailsComponent } from '../../pages/event-details/event-details.component';
 
+import {SuccessCode} from '../../providers/appConstants';
+
 @Component({
   // moduleId: module.id,
   selector: 'admin-page',
@@ -17,6 +19,8 @@ export class AdminPageComponent implements OnInit {
 
   events: Event[] = [];
   selectedEvent: Event;
+  codes = SuccessCode;
+  successCode: SuccessCode;
 
   constructor(private eventService: EventsService) { }
 
@@ -40,9 +44,7 @@ export class AdminPageComponent implements OnInit {
 
   createNewEvent() {
     var event: Event = {
-      _id:"",
       name: "",
-      image: "",
       description: "",
       date: "",
       participants: Array<string>()
@@ -53,27 +55,38 @@ export class AdminPageComponent implements OnInit {
   }
 
   deleteEvent = (eventId: String) => {
-    var idx = this.getIndexOfEvent(eventId);
-    if (idx !== -1) {
-      this.events.splice(idx, 1);
-      this.selectEvent(null);
-    }
+    try {
+      var idx = this.getIndexOfEvent(eventId);
+      if (idx !== -1) {
+        this.events.splice(idx, 1);
+        this.selectEvent(null);
+      }
+    } catch(e){console.log(e)}
+    this.selectedEvent = null;
+    this.successCode = SuccessCode.DELETE;
     return this.events;
   }
 
   addEvent = (event: Event) => {
-    this.events.push(event);
-    this.selectEvent(event);
+    try {
+      this.events.push(event);
+      this.selectEvent(event);
+    } catch(e){console.log(e)}
+    this.selectedEvent = null;
+    this.successCode = SuccessCode.ADD;
     return this.events;
   }
 
   updateEvent = (event: Event) => {
-    console.log(event);
-    var idx = this.getIndexOfEvent(event._id);
-    if (idx !== -1) {
-      this.events[idx] = event;
-      this.selectEvent(event);
-    }
+    try{
+      var idx = this.getIndexOfEvent(event._id);
+      if (idx !== -1) {
+        this.events[idx] = event;
+        this.selectEvent(event);
+      }
+    } catch(e){console.log(e)}
+    this.selectedEvent = null;
+    this.successCode = SuccessCode.UPDATE;
     return this.events;
   }
 }

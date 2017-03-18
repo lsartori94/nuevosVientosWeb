@@ -7,41 +7,42 @@ import { Backend } from '../appConstants';
 
 @Injectable()
 export class PeopleService {
+    backend = Backend;
 
-    constructor (private http: Http, private backend: Backend) {}
+    constructor (private http: Http) {}
 
     // get("/api/people")
-    getEvents(): Promise<People[]> {
+    getPeople(): Promise<People[]> {
       return this.http.get(this.backend.peopleAPI)
                  .toPromise()
-                 .then(response => response.json() as People[])
+                 .then(response => response.json().data as People[])
                  .catch(this.handleError);
     }
 
     // post("/api/people")
-    createEvent(newPerson: People): Promise<People> {
+    createPerson(newPerson: People): Promise<People> {
       return this.http.post(this.backend.peopleAPI, newPerson)
                  .toPromise()
-                 .then(response => response.json() as People)
+                 .then(response => response.json().data as People)
                  .catch(this.handleError);
     }
 
     // get("/api/people/:id") endpoint not used by Angular app
 
     // delete("/api/people/:id")
-    deleteEvent(delPersonId: String): Promise<String> {
+    deletePerson(delPersonId: String): Promise<String> {
       return this.http.delete(this.backend.peopleAPI + '/' + delPersonId)
                  .toPromise()
-                 .then(response => response.json() as String)
+                 .then(response => response.json().data as String)
                  .catch(this.handleError);
     }
 
     // put("/api/people/:id")
-    updateEvent(putPerson: People): Promise<People> {
+    updatePerson(putPerson: People): Promise<People> {
       var putUrl = this.backend.peopleAPI + '/' + putPerson._id;
       return this.http.put(putUrl, putPerson)
                  .toPromise()
-                 .then(response => response.json() as People)
+                 .then(response => response.json().data as People)
                  .catch(this.handleError);
     }
 

@@ -1,5 +1,11 @@
 export const Backend = {
     eventsAPI: `api/events`,
-    peopleAPI: `api/people`,
-    organizersAPI: `api/organizers`
+    organizersAPI: `api/organizers`,
+    upload: 'api/upload'
+}
+
+export enum SuccessCode {
+    UPDATE,
+    DELETE,
+    ADD
 }

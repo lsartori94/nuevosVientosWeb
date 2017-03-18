@@ -22,12 +22,33 @@ export class EventDetailsComponent {
   @Input()
   deleteHandler: Function;
 
-  people: Array<People> = [];
+  addingParticipant: boolean = false;
+  name: string = '';
+  bio: string = '';
 
   constructor (private eventsService: EventsService) {}
 
-  findParticipant(id: string) {
-    return this.people.reduce(elem => elem._id === id ? elem : null);
+  beginAdition(){
+    this.addingParticipant = true;
+  }
+
+  cancelAddition() {
+    this.name = '';
+    this.bio = '';
+    this.addingParticipant = false;
+  }
+
+  saveParticipant() {
+    let participant = {
+      "name": this.name,
+      "bio": this.bio
+    }
+    this.eventToShow.participants.push(participant);
+    this.cancelAddition();
+  }
+
+  deleteParticipant(idx) {
+    this.eventToShow.participants.splice(idx, 1);
   }
 
   createEvent(event: Event) {
@@ -44,8 +65,6 @@ export class EventDetailsComponent {
 
   deleteEvent(eventId: String): void {
     this.eventsService.deleteEvent(eventId).then((deletedEventId: String) => {
-      console.log("DELETED");
-      console.log(deletedEventId);
       this.deleteHandler(deletedEventId);
     });
   }
