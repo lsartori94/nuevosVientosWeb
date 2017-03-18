@@ -15,14 +15,6 @@ app.use(bodyParser.json());
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-// 404 catch 
-app.all('*', function (req, res) {
-    if (!req.url.includes('/api/')) {
-        res.status(200).sendFile(distDir + '/index.html');
-    }
-    return;
-});
-
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 mongodb.MongoClient.connect(db_dir, (err, database)=> {
     if (err) {
@@ -228,4 +220,11 @@ app.delete("/api/organizers/:id", (req, res) => {
             res.status(200).json(req.params.id);
         }
     });
+});
+
+// 404 catch 
+app.all('*', function (req, res) {
+    if (!req.url.includes('/api/')) {
+        res.status(200).sendFile(distDir + '/index.html');
+    }
 });
